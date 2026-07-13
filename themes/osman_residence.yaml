@@ -1,0 +1,75 @@
+osman_residence:
+  # ============================================================
+  # OSMAN RESIDENCE THEME — v0.1 (Sprint 1: Foundation)
+  # Donker, warm, koperkleurig thema — gebaseerd op het mockup-ontwerp
+  # ============================================================
+
+  # -- Achtergronden --
+  primary-background-color: "#14100e"
+  secondary-background-color: "#1c1714"
+  card-background-color: "#1f1a17"
+  ha-card-background: "#1f1a17"
+  app-header-background-color: "#14100e"
+  clear-background-color: "#14100e"
+
+  # -- Tekst --
+  primary-text-color: "#f5f1ec"
+  secondary-text-color: "#948b83"
+  text-primary-color: "#f5f1ec"
+  disabled-text-color: "#5c5650"
+  sidebar-text-color: "#f5f1ec"
+
+  # -- Accentkleur (koper/oranje) --
+  primary-color: "#c98a52"
+  accent-color: "#c98a52"
+  state-icon-active-color: "#c98a52"
+  state-icon-color: "#7d766f"
+  switch-checked-color: "#c98a52"
+  switch-unchecked-color: "#3a332e"
+  slider-color: "#c98a52"
+  paper-slider-knob-color: "#c98a52"
+  paper-slider-active-color: "#c98a52"
+  paper-slider-secondary-color: "#3a332e"
+
+  # -- Randen / diepte --
+  divider-color: "#2c2521"
+  ha-card-border-radius: "16px"
+  ha-card-border-width: "1px"
+  ha-card-border-color: "#2c2521"
+  ha-card-box-shadow: "0 4px 14px rgba(0,0,0,0.35)"
+
+  # -- Statuskleuren (voor gebruik met var() in card-mod) --
+  osman-bg: "#14100e"
+  osman-surface: "#1f1a17"
+  osman-surface-2: "#241e1a"
+  osman-accent: "#c98a52"
+  osman-accent-soft: "rgba(201, 138, 82, 0.15)"
+  osman-text: "#f5f1ec"
+  osman-text-muted: "#948b83"
+  osman-border: "#2c2521"
+  osman-green: "#7bc47f"
+  osman-blue: "#5a9bd4"
+  osman-red: "#d9705a"
+
+  # -- Mushroom-cards variabelen --
+  mush-rgb-white: "245, 241, 236"
+  mush-rgb-black: "20, 16, 14"
+  mush-icon-border-radius: "12px"
+  mush-card-spacing: "10px"
+
+  # -- Verplicht voor card-mod --
+  card-mod-theme: "osman_residence"
+
+  # -- Globale kaartstyling (via card-mod) --
+  card-mod-card-yaml: |
+    ha-card {
+      border-radius: 16px;
+      border: 1px solid #2c2521;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.35);
+    }
+
+  # -- Lettertype --
+  paper-font-common-base_-_font-family: "'Inter', 'Segoe UI', sans-serif"
+  paper-font-body1_-_font-family: "'Inter', 'Segoe UI', sans-serif"
+  ha-card-header-font-size: "15px"
+
