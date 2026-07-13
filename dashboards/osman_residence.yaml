@@ -239,6 +239,620 @@ views:
                 entity: sensor.batterij_percentage
                 show_state: false
                 custom_fields:
+                  pct: "[[[ return (states['sensor.batterij_percentage']?.state || '--') + '%' ]]]"
+                  rest: "[[[ return (states['sensor.batterij_resterend']?.state || '--') + ' kWh over' ]]]"
+                  bar: ""
+                styles:
+                  card:
+                    - padding: 14px
+                    - text-align: left
+                  name:
+                    - font-size: 11px
+                    - color: var(--osman-text-muted)
+                    - letter-spacing: 2px
+                    - justify-self: start
+                  custom_fields:
+                    pct:
+                      - font-size: 24px
+                      - color: var(--osman-text)
+                      - justify-self: start
+                      - grid-row: "2"
+                    rest:
+                      - font-size: 12px
+                      - color: var(--osman-text-muted)
+                      - justify-self: start
+                      - grid-row: "3"
+                    bar:
+                      - justify-self: start
+                      - grid-row: "4"
+                      - width: 100%
+                      - height: 6px
+                      - border-radius: 3px
+                      - margin-top: 6px
+                      - background: >
+                          [[[ const p = parseFloat(entity.state) || 0; return `linear-gradient(90deg, var(--osman-green) ${p}%, var(--osman-surface-2) ${p}%)` ]]]
+
+          # -- Rij 2: Verlichting / Scènes / Klimaat --
+          - type: grid
+            columns: 3
+            square: false
+            cards:
+
+              # TODO: vervang light.* door jouw verlichtingsentiteiten
+              - type: vertical-stack
+                cards:
+                  - type: markdown
+                    content: "VERLICHTING"
+                    card_mod: &section_header
+                      style: |
+                        ha-card { background: transparent; box-shadow: none; border: none; padding: 4px 4px 10px; }
+                        p { color: var(--osman-text-muted); letter-spacing: 2px; font-size: 12px; margin: 0; }
+                  - type: custom:mushroom-light-card
+                    entity: light.woonkamer_spots
+                    name: Woonkamer Spots
+                    show_brightness_control: true
+                    use_light_color: false
+                  - type: custom:mushroom-light-card
+                    entity: light.eettafel
+                    name: Eettafel
+                    show_brightness_control: true
+                  - type: custom:mushroom-light-card
+                    entity: light.keuken
+                    name: Keuken
+                    show_brightness_control: true
+                  - type: custom:mushroom-light-card
+                    entity: light.hal
+                    name: Hal
+                    show_brightness_control: true
+                  - type: custom:mushroom-light-card
+                    entity: light.toilet
+                    name: Toilet
+                    show_brightness_control: true
+                  - type: custom:button-card
+                    name: Alle verlichting
+                    show_icon: false
+                    tap_action:
+                      action: navigate
+                      navigation_path: /osman-residence/verlichting
+                    styles:
+                      card:
+                        - background: var(--osman-surface-2)
+                        - padding: 10px
+                      name:
+                        - color: var(--osman-text-muted)
+                        - font-size: 13px
+
+              # TODO: vervang scene.* door jouw scènes
+              - type: vertical-stack
+                cards:
+                  - type: markdown
+                    content: "SCÈNES"
+                    card_mod: *section_header
+                  - type: custom:bubble-card
+                    card_type: button
+                    entity: scene.filmstand
+                    name: Filmstand
+                    sub_button:
+                      - name: Verlichting dimmen
+                  - type: custom:bubble-card
+                    card_type: button
+                    entity: scene.avondstand
+                    name: Avondstand
+                    sub_button:
+                      - name: Sfeervolle verlichting
+                  - type: custom:bubble-card
+                    card_type: button
+                    entity: scene.eetstand
+                    name: Eetstand
+                    sub_button:
+                      - name: Fel licht
+                  - type: custom:bubble-card
+                    card_type: button
+                    entity: scene.nachtstand
+                    name: Nachtstand
+                    sub_button:
+                      - name: Alles uit / minimaal
+                  - type: custom:button-card
+                    name: Alle scènes
+                    show_icon: false
+                    tap_action:
+                      action: navigate
+                      navigation_path: /osman-residence/instellingen
+                    styles:
+                      card:
+                        - background: var(--osman-surface-2)
+                        - padding: 10px
+                      name:
+                        - color: var(--osman-text-muted)
+                        - font-size: 13px
+
+              # TODO: vervang climate.* door jouw klimaatentiteiten
+              - type: vertical-stack
+                cards:
+                  - type: markdown
+                    content: "KLIMAAT"
+                    card_mod: *section_header
+                  - type: custom:mushroom-climate-card
+                    entity: climate.woonkamer
+                    name: Woonkamer
+                    show_temperature_control: true
+                  - type: custom:mushroom-climate-card
+                    entity: climate.slaapkamer
+                    name: Slaapkamer
+                    show_temperature_control: true
+                  - type: custom:button-card
+                    name: Alle klimaat
+                    show_icon: false
+                    tap_action:
+                      action: navigate
+                      navigation_path: /osman-residence/klimaat
+                    styles:
+                      card:
+                        - background: var(--osman-surface-2)
+                        - padding: 10px
+                      name:
+                        - color: var(--osman-text-muted)
+                        - font-size: 13px
+
+          # -- Rij 3: Energie / Rolluiken / Snelkoppelingen --
+          - type: grid
+            columns: 3
+            square: false
+            cards:
+
+              # TODO: vervang sensor.zonnepanelen_vermogen / sensor.huis_verbruik / sensor.batterij_vermogen
+              - type: vertical-stack
+                cards:
+                  - type: markdown
+                    content: "ENERGIE"
+                    card_mod: *section_header
+                  - type: grid
+                    columns: 3
+                    square: false
+                    cards:
+                      - type: custom:mushroom-template-card
+                        icon: mdi:solar-power
+                        icon_color: green
+                        primary: "{{ states('sensor.zonnepanelen_vermogen') }} kW"
+                        secondary: Zonnepanelen
+                      - type: custom:mushroom-template-card
+                        icon: mdi:home-lightning-bolt
+                        icon_color: blue
+                        primary: "{{ states('sensor.huis_verbruik') }} kW"
+                        secondary: Verbruik
+                      - type: custom:mushroom-template-card
+                        icon: mdi:battery-plus
+                        icon_color: green
+                        primary: "{{ states('sensor.batterij_vermogen') }} kW"
+                        secondary: "Batterij · {{ states('sensor.batterij_percentage') }}%"
+
+              # TODO: vervang cover.* door jouw rolluiken/covers (Somfy via TaHoma Switch)
+              - type: vertical-stack
+                cards:
+                  - type: markdown
+                    content: "ROLLUIKEN"
+                    card_mod: *section_header
+                  - type: custom:mushroom-cover-card
+                    entity: cover.woonkamer
+                    name: Woonkamer
+                    show_buttons_control: true
+                  - type: custom:mushroom-cover-card
+                    entity: cover.slaapkamer
+                    name: Slaapkamer
+                    show_buttons_control: true
+                  - type: custom:mushroom-cover-card
+                    entity: cover.kantoor
+                    name: Kantoor
+                    show_buttons_control: true
+                  - type: custom:button-card
+                    name: Alle rolluiken
+                    show_icon: false
+                    tap_action:
+                      action: navigate
+                      navigation_path: /osman-residence/rolluiken
+                    styles:
+                      card:
+                        - background: var(--osman-surface-2)
+                        - padding: 10px
+                      name:
+                        - color: var(--osman-text-muted)
+                        - font-size: 13px
+
+              # TODO: vervang lock.voordeur / cover.garage / switch.buitenkamer / light.oprit
+              - type: vertical-stack
+                cards:
+                  - type: markdown
+                    content: "SNELKOPPELINGEN"
+                    card_mod: *section_header
+                  - type: grid
+                    columns: 2
+                    square: false
+                    cards:
+                      - type: custom:mushroom-lock-card
+                        entity: lock.voordeur
+                        name: Voordeur
+                      - type: custom:mushroom-cover-card
+                        entity: cover.garage
+                        name: Garage
+                      - type: custom:mushroom-entity-card
+                        entity: switch.buitenkamer
+                        name: Buitenkamer
+                        icon: mdi:shield-outline
+                      - type: custom:mushroom-light-card
+                        entity: light.oprit
+                        name: Oprit verlichting
+
+  # ==========================================================================
+  # STUB-VIEWS — worden uitgewerkt in Sprint 2 en 3
+  # ==========================================================================
+  - title: Verlichting
+    path: verlichting
+    type: custom:grid-layout
+    layout:
+      grid-template-columns: "230px 1fr"
+      grid-template-rows: "1fr"
+      grid-template-areas: |
+        "sidebar content"
+    cards:
+      - *sidebar
+      - type: markdown
+        view_layout: {grid-area: content}
+        content: "## 💡 Verlichting\n\nDeze pagina volgt in **Sprint 2**."
+        card_mod:
+          style: "ha-card { background: transparent; box-shadow: none; border: none; padding: 40px; }"
+
+  - title: Rolluiken
+    path: rolluiken
+    type: custom:grid-layout
+    layout:
+      grid-template-columns: "230px 1fr"
+      grid-template-rows: "1fr"
+      grid-template-areas: |
+        "sidebar content"
+    cards:
+      - *sidebar
+      - type: markdown
+        view_layout: {grid-area: content}
+        content: "## 🪟 Rolluiken\n\nDeze pagina volgt in **Sprint 2**."
+        card_mod:
+          style: "ha-card { background: transparent; box-shadow: none; border: none; padding: 40px; }"
+
+  - title: Klimaat
+    path: klimaat
+    type: custom:grid-layout
+    layout:
+      grid-template-columns: "230px 1fr"
+      grid-template-rows: "1fr"
+      grid-template-areas: |
+        "sidebar content"
+    cards:
+      - *sidebar
+      - type: markdown
+        view_layout: {grid-area: content}
+        content: "## 🌡 Klimaat\n\nDeze pagina volgt in **Sprint 2**."
+        card_mod:
+          style: "ha-card { background: transparent; box-shadow: none; border: none; padding: 40px; }"
+
+  - title: Energie
+    path: energie
+    type: custom:grid-layout
+    layout:
+      grid-template-columns: "230px 1fr"
+      grid-template-rows: "1fr"
+      grid-template-areas: |
+        "sidebar content"
+    cards:
+      - *sidebar
+      - type: markdown
+        view_layout: {grid-area: content}
+        content: "## ⚡ Energie\n\nDeze pagina volgt in **Sprint 2**."
+        card_mod:
+          style: "ha-card { background: transparent; box-shadow: none; border: none; padding: 40px; }"
+
+  - title: Media
+    path: media
+    type: custom:grid-layout
+    layout:
+      grid-template-columns: "230px 1fr"
+      grid-template-rows: "1fr"
+      grid-template-areas: |
+        "sidebar content"
+    cards:
+      - *sidebar
+      - type: markdown
+        view_layout: {grid-area: content}
+        content: "## 🎵 Media\n\nDeze pagina volgt in **Sprint 3**."
+        card_mod:
+          style: "ha-card { background: transparent; box-shadow: none; border: none; padding: 40px; }"
+
+  - title: Beveiliging
+    path: beveiliging
+    type: custom:grid-layout
+    layout:
+      grid-template-columns: "230px 1fr"
+      grid-template-rows: "1fr"
+      grid-template-areas: |
+        "sidebar content"
+    cards:
+      - *sidebar
+      - type: markdown
+        view_layout: {grid-area: content}
+        content: "## 🛡 Beveiliging\n\nDeze pagina volgt in **Sprint 3**."
+        card_mod:
+          style: "ha-card { background: transparent; box-shadow: none; border: none; padding: 40px; }"
+
+  - title: "Camera's"
+    path: cameras
+    type: custom:grid-layout
+    layout:
+      grid-template-columns: "230px 1fr"
+      grid-template-rows: "1fr"
+      grid-template-areas: |
+        "sidebar content"
+    cards:
+      - *sidebar
+      - type: markdown
+        view_layout: {grid-area: content}
+        content: "## 📹 Camera's\n\nDeze pagina volgt in **Sprint 2** (Hikvision)."
+        card_mod:
+          style: "ha-card { background: transparent; box-shadow: none; border: none; padding: 40px; }"
+
+  - title: Instellingen
+    path: instellingen
+    type: custom:grid-layout
+    layout:
+      grid-template-columns: "230px 1fr"
+      grid-template-rows: "1fr"
+      grid-template-areas: |
+        "sidebar content"
+    cards:
+      - *sidebar
+      - type: markdown
+        view_layout: {grid-area: content}
+        content: "## ⚙️ Instellingen\n\nHier komen later scènebeheer en systeeminstellingen."
+        card_mod:
+          style: "ha-card { background: transparent; box-shadow: none; border: none; padding: 40px; }"
+##############################################################################
+# OSMAN RESIDENCE UI — v0.1 (Sprint 1: Foundation)
+# Raw Lovelace-configuratie voor het dashboard "Osman-Residence"
+#
+# VEREISTE HACS-FRONTEND CARDS (Instellingen → HACS → Frontend):
+#   - Mushroom
+#   - Bubble Card
+#   - button-card
+#   - card-mod
+#   - layout-card
+#   - apexcharts-card
+#   - browser_mod (reserveren we voor Sprint 3: pop-ups, kiosk mode)
+#
+# INSTALLEREN:
+#   1. Zet themes/osman_residence.yaml in /config/themes/
+#      en zorg dat configuration.yaml bevat:
+#        frontend:
+#          themes: !include_dir_merge_named themes
+#   2. Ga naar het dashboard "Osman-Residence" → potlood (bewerken)
+#      → drie puntjes rechtsboven → "Raw configuratie bewerken"
+#      → plak de volledige inhoud van dit bestand.
+#   3. Zoek op "TODO" hieronder en vervang elke entity_id door je
+#      eigen entiteiten (Ontwikkelaarstools → Staten om ze op te zoeken).
+#   4. Stel het thema van dit dashboard in op "osman_residence"
+#      (dashboard-instellingen, of onderaan je gebruikersprofiel).
+##############################################################################
+
+views:
+  # ==========================================================================
+  # OVERZICHT (Home)
+  # ==========================================================================
+  - title: Overzicht
+    path: overzicht
+    type: custom:grid-layout
+    layout:
+      grid-template-columns: "230px 1fr"
+      grid-template-rows: "1fr"
+      grid-template-areas: |
+        "sidebar content"
+      mediaquery:
+        "(max-width: 800px)":
+          grid-template-columns: "1fr"
+          grid-template-areas: |
+            "content"
+
+    cards:
+      # ---- SIDEBAR (herbruikt op elke view via de &sidebar anchor) ----
+      - &sidebar
+        type: vertical-stack
+        view_layout:
+          grid-area: sidebar
+        cards:
+          - type: markdown
+            content: |
+              ## OSMAN
+              ##### RESIDENCE
+            card_mod:
+              style: |
+                ha-card { background: transparent; box-shadow: none; border: none; padding: 22px 20px 10px; }
+                h2 { color: var(--osman-accent); letter-spacing: 3px; font-size: 19px; margin: 0; }
+                h5 { color: var(--osman-text-muted); letter-spacing: 3px; font-size: 10px; margin: 2px 0 0; }
+
+          - type: custom:bubble-card
+            card_type: menu
+            vertical: true
+            show_state: false
+            show_arrow: false
+            button_type: name
+            buttons:
+              - name: Overzicht
+                icon: mdi:home-variant
+                tap_action:
+                  action: navigate
+                  navigation_path: /osman-residence/overzicht
+              - name: Verlichting
+                icon: mdi:lightbulb-outline
+                tap_action:
+                  action: navigate
+                  navigation_path: /osman-residence/verlichting
+              - name: Rolluiken
+                icon: mdi:blinds-horizontal
+                tap_action:
+                  action: navigate
+                  navigation_path: /osman-residence/rolluiken
+              - name: Klimaat
+                icon: mdi:thermometer
+                tap_action:
+                  action: navigate
+                  navigation_path: /osman-residence/klimaat
+              - name: Energie
+                icon: mdi:lightning-bolt
+                tap_action:
+                  action: navigate
+                  navigation_path: /osman-residence/energie
+              - name: Media
+                icon: mdi:play-circle-outline
+                tap_action:
+                  action: navigate
+                  navigation_path: /osman-residence/media
+              - name: Beveiliging
+                icon: mdi:shield-outline
+                tap_action:
+                  action: navigate
+                  navigation_path: /osman-residence/beveiliging
+              - name: "Camera's"
+                icon: mdi:cctv
+                tap_action:
+                  action: navigate
+                  navigation_path: /osman-residence/cameras
+              - name: Instellingen
+                icon: mdi:cog-outline
+                tap_action:
+                  action: navigate
+                  navigation_path: /osman-residence/instellingen
+            card_mod:
+              style: |
+                bubble-line-button-container { color: var(--osman-text-muted) !important; }
+                .bubble-button-card-container.bubble-selected { background: var(--osman-accent-soft) !important; color: var(--osman-accent) !important; }
+
+          # TODO: vervang sensor.time / sensor.date door jouw "Datum & tijd"-sensoren
+          # (Instellingen → Apparaten en diensten → Integratie toevoegen → "Datum & tijd")
+          - type: markdown
+            content: |
+              ### {{ states('sensor.time') }}
+              {{ states('sensor.date') }}
+            card_mod:
+              style: |
+                ha-card { background: transparent; box-shadow: none; border: none; padding: 16px 20px; margin-top: auto; }
+                h3 { color: var(--osman-text); font-size: 26px; margin: 0; }
+
+      # ---- CONTENT ----
+      - type: vertical-stack
+        view_layout:
+          grid-area: content
+        cards:
+
+          # -- Header: begroeting + statuschips --
+          - type: horizontal-stack
+            cards:
+              - type: markdown
+                # TODO: vervang person.eric door jouw person-entiteit
+                content: >
+                  {% set uur = now().hour %}
+                  {% if uur < 12 %}## Goedemorgen Eric
+                  {% elif uur < 18 %}## Goedemiddag Eric
+                  {% else %}## Goedenavond Eric{% endif %}
+
+                  {% if is_state('person.eric', 'home') %}Fijn dat je thuis bent{% else %}Welkom terug{% endif %}
+                card_mod:
+                  style: |
+                    ha-card { background: transparent; box-shadow: none; border: none; padding: 20px 4px; }
+                    h2 { color: var(--osman-text); font-size: 26px; margin: 0; }
+                    p { color: var(--osman-accent); margin: 4px 0 0; }
+
+              # TODO: vervang entity_id's door jouw person/klimaat-sensoren
+              - type: custom:mushroom-chips-card
+                alignment: end
+                chips:
+                  - type: template
+                    icon: mdi:home
+                    content: Thuis
+                    icon_color: orange
+                  - type: template
+                    icon: mdi:thermometer
+                    content: "{{ states('climate.woonkamer') | default('--') }}°"
+                    entity: climate.woonkamer
+                  - type: template
+                    icon: mdi:water-percent
+                    content: "{{ state_attr('climate.woonkamer', 'current_humidity') | default('--') }}%"
+                    entity: climate.woonkamer
+                card_mod:
+                  style: |
+                    ha-card { background: transparent; box-shadow: none; }
+
+          # -- 4 statuskaarten --
+          - type: grid
+            columns: 4
+            square: false
+            cards:
+              # TODO: vervang sensor.temperatuur_woonkamer
+              - type: custom:apexcharts-card
+                header:
+                  show: true
+                  title: BINNENKLIMAAT
+                  show_states: true
+                  colorize_states: false
+                graph_span: 24h
+                apex_config:
+                  chart: {height: 90, toolbar: {show: false}}
+                  legend: {show: false}
+                  grid: {show: false}
+                series:
+                  - entity: sensor.temperatuur_woonkamer
+                    name: Binnen
+                    color: var(--osman-accent)
+                    stroke_width: 2
+                    show:
+                      extremas: false
+
+              # TODO: vervang weather.home door jouw weer-entiteit
+              - type: custom:mushroom-template-card
+                primary: "{{ state_attr('weather.home','temperature') }}°"
+                secondary: "{{ states('weather.home') }}"
+                icon: >
+                  {% set c = states('weather.home') %}
+                  {% if 'cloud' in c %}mdi:weather-partly-cloudy
+                  {% elif 'rain' in c %}mdi:weather-rainy
+                  {% elif 'sun' in c or c == 'clear-night' %}mdi:weather-sunny
+                  {% else %}mdi:weather-cloudy{% endif %}
+                icon_color: orange
+                entity: weather.home
+                card_mod:
+                  style: |
+                    ha-card { padding: 12px; }
+
+              # TODO: vervang sensor.zonnepanelen_vermogen
+              - type: custom:apexcharts-card
+                header:
+                  show: true
+                  title: ENERGIE OPWEK
+                  show_states: true
+                graph_span: 24h
+                apex_config:
+                  chart: {height: 90, toolbar: {show: false}}
+                  legend: {show: false}
+                  grid: {show: false}
+                series:
+                  - entity: sensor.zonnepanelen_vermogen
+                    name: Opwek
+                    color: var(--osman-green)
+                    stroke_width: 2
+                    show:
+                      extremas: false
+
+              # TODO: vervang sensor.batterij_percentage / sensor.batterij_resterend
+              - type: custom:button-card
+                icon: mdi:battery-charging-80
+                name: BATTERIJ
+                entity: sensor.batterij_percentage
+                show_state: false
+                custom_fields:
                   pct: "[[[ return states['sensor.batterij_percentage'].state + '%' ]]]"
                   rest: "[[[ return (states['sensor.batterij_resterend']?.state || '--') + ' kWh over' ]]]"
                   bar: ""
