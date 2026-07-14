@@ -42,6 +42,7 @@ views:
   # ==========================================================================
   - title: Overzicht
     path: overzicht
+    visible: false
     type: custom:grid-layout
     layout: &page_layout
       grid-template-columns: "230px 1fr"
@@ -281,7 +282,7 @@ views:
                       - border-radius: 3px
                       - margin-top: 6px
                       - background: >
-                          [[[ const p = parseFloat(entity.state) || 0; return `linear-gradient(90deg, var(--osman-green) ${p}%, var(--osman-surface-2) ${p}%)` ]]]
+                          [[[ const p = parseFloat(entity?.state) || 0; return `linear-gradient(90deg, var(--osman-green) ${p}%, var(--osman-surface-2) ${p}%)` ]]]
 
           # -- Rij 2: Verlichting / Scènes / Klimaat --
           - type: grid
@@ -494,6 +495,7 @@ views:
   # ==========================================================================
   - title: Verlichting
     path: verlichting
+    visible: false
     type: custom:grid-layout
     layout: *page_layout
     cards:
@@ -618,6 +620,7 @@ views:
   # ==========================================================================
   - title: Rolluiken
     path: rolluiken
+    visible: false
     type: custom:grid-layout
     layout: *page_layout
     cards:
@@ -712,6 +715,7 @@ views:
   # ==========================================================================
   - title: Klimaat
     path: klimaat
+    visible: false
     type: custom:grid-layout
     layout: *page_layout
     cards:
@@ -772,6 +776,7 @@ views:
   # ==========================================================================
   - title: Energie
     path: energie
+    visible: false
     type: custom:grid-layout
     layout: *page_layout
     cards:
@@ -869,6 +874,7 @@ views:
   # ==========================================================================
   - title: Media
     path: media
+    visible: false
     type: custom:grid-layout
     layout: *page_layout
     cards:
@@ -954,6 +960,7 @@ views:
   # ==========================================================================
   - title: Beveiliging
     path: beveiliging
+    visible: false
     type: custom:grid-layout
     layout: *page_layout
     cards:
@@ -1029,6 +1036,7 @@ views:
   # ==========================================================================
   - title: "Camera's"
     path: cameras
+    visible: false
     type: custom:grid-layout
     layout: *page_layout
     cards:
@@ -1076,6 +1084,7 @@ views:
   # ==========================================================================
   - title: Instellingen
     path: instellingen
+    visible: false
     type: custom:grid-layout
     layout: *page_layout
     cards:
