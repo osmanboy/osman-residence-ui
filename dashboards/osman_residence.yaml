@@ -71,62 +71,91 @@ views:
                 h2 { color: var(--osman-accent); letter-spacing: 3px; font-size: 19px; margin: 0; }
                 h5 { color: var(--osman-text-muted); letter-spacing: 3px; font-size: 10px; margin: 2px 0 0; }
 
-          - type: custom:bubble-card
-            card_type: menu
-            vertical: true
-            show_state: false
-            show_arrow: false
-            button_type: name
-            buttons:
-              - name: Overzicht
-                icon: mdi:home-variant
-                tap_action:
-                  action: navigate
-                  navigation_path: /osman-residence/overzicht
-              - name: Verlichting
-                icon: mdi:lightbulb-outline
-                tap_action:
-                  action: navigate
-                  navigation_path: /osman-residence/verlichting
-              - name: Rolluiken
-                icon: mdi:blinds-horizontal
-                tap_action:
-                  action: navigate
-                  navigation_path: /osman-residence/rolluiken
-              - name: Klimaat
-                icon: mdi:thermometer
-                tap_action:
-                  action: navigate
-                  navigation_path: /osman-residence/klimaat
-              - name: Energie
-                icon: mdi:lightning-bolt
-                tap_action:
-                  action: navigate
-                  navigation_path: /osman-residence/energie
-              - name: Media
-                icon: mdi:play-circle-outline
-                tap_action:
-                  action: navigate
-                  navigation_path: /osman-residence/media
-              - name: Beveiliging
-                icon: mdi:shield-outline
-                tap_action:
-                  action: navigate
-                  navigation_path: /osman-residence/beveiliging
-              - name: "Camera's"
-                icon: mdi:cctv
-                tap_action:
-                  action: navigate
-                  navigation_path: /osman-residence/cameras
-              - name: Instellingen
-                icon: mdi:cog-outline
-                tap_action:
-                  action: navigate
-                  navigation_path: /osman-residence/instellingen
-            card_mod:
-              style: |
-                bubble-line-button-container { color: var(--osman-text-muted) !important; }
-                .bubble-button-card-container.bubble-selected { background: var(--osman-accent-soft) !important; color: var(--osman-accent) !important; }
+          # Navigatiemenu. Bubble Card heeft geen "menu" card_type (dat bestaat
+          # niet — vandaar dat dit eerder stil faalde); button-card doet
+          # hetzelfde betrouwbaar, want dat gebruiken we hier toch al overal.
+          - type: custom:button-card
+            name: Overzicht
+            icon: mdi:home-variant
+            tap_action:
+              action: navigate
+              navigation_path: /osman-residence/overzicht
+            styles: &sidebar_menu_button_style
+              card:
+                - background: transparent
+                - box-shadow: none
+                - border-radius: 0
+                - padding: 10px 20px
+                - justify-content: start
+              grid:
+                - grid-template-areas: '"i n"'
+                - grid-template-columns: 22px 1fr
+                - justify-items: start
+                - align-items: center
+              icon:
+                - width: 20px
+                - color: var(--osman-text-muted)
+              name:
+                - font-size: 14px
+                - color: var(--osman-text-muted)
+                - justify-self: start
+                - margin-left: 10px
+          - type: custom:button-card
+            name: Verlichting
+            icon: mdi:lightbulb-outline
+            tap_action:
+              action: navigate
+              navigation_path: /osman-residence/verlichting
+            styles: *sidebar_menu_button_style
+          - type: custom:button-card
+            name: Rolluiken
+            icon: mdi:blinds-horizontal
+            tap_action:
+              action: navigate
+              navigation_path: /osman-residence/rolluiken
+            styles: *sidebar_menu_button_style
+          - type: custom:button-card
+            name: Klimaat
+            icon: mdi:thermometer
+            tap_action:
+              action: navigate
+              navigation_path: /osman-residence/klimaat
+            styles: *sidebar_menu_button_style
+          - type: custom:button-card
+            name: Energie
+            icon: mdi:lightning-bolt
+            tap_action:
+              action: navigate
+              navigation_path: /osman-residence/energie
+            styles: *sidebar_menu_button_style
+          - type: custom:button-card
+            name: Media
+            icon: mdi:play-circle-outline
+            tap_action:
+              action: navigate
+              navigation_path: /osman-residence/media
+            styles: *sidebar_menu_button_style
+          - type: custom:button-card
+            name: Beveiliging
+            icon: mdi:shield-outline
+            tap_action:
+              action: navigate
+              navigation_path: /osman-residence/beveiliging
+            styles: *sidebar_menu_button_style
+          - type: custom:button-card
+            name: "Camera's"
+            icon: mdi:cctv
+            tap_action:
+              action: navigate
+              navigation_path: /osman-residence/cameras
+            styles: *sidebar_menu_button_style
+          - type: custom:button-card
+            name: Instellingen
+            icon: mdi:cog-outline
+            tap_action:
+              action: navigate
+              navigation_path: /osman-residence/instellingen
+            styles: *sidebar_menu_button_style
 
           # TODO: vervang sensor.time / sensor.date door jouw "Datum & tijd"-sensoren
           # (Instellingen → Apparaten en diensten → Integratie toevoegen → "Datum & tijd")
