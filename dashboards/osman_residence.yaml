@@ -42,7 +42,6 @@ views:
   # ==========================================================================
   - title: Overzicht
     path: overzicht
-    visible: false
     type: custom:grid-layout
     layout: &page_layout
       grid-template-columns: "230px 1fr"
