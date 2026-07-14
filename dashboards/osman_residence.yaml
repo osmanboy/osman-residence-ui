@@ -79,7 +79,7 @@ views:
             icon: mdi:home-variant
             tap_action:
               action: navigate
-              navigation_path: /osman-residence/overzicht
+              navigation_path: /Osman-Residence/overzicht
             styles: &sidebar_menu_button_style
               card:
                 - background: transparent
@@ -105,56 +105,56 @@ views:
             icon: mdi:lightbulb-outline
             tap_action:
               action: navigate
-              navigation_path: /osman-residence/verlichting
+              navigation_path: /Osman-Residence/verlichting
             styles: *sidebar_menu_button_style
           - type: custom:button-card
             name: Rolluiken
             icon: mdi:blinds-horizontal
             tap_action:
               action: navigate
-              navigation_path: /osman-residence/rolluiken
+              navigation_path: /Osman-Residence/rolluiken
             styles: *sidebar_menu_button_style
           - type: custom:button-card
             name: Klimaat
             icon: mdi:thermometer
             tap_action:
               action: navigate
-              navigation_path: /osman-residence/klimaat
+              navigation_path: /Osman-Residence/klimaat
             styles: *sidebar_menu_button_style
           - type: custom:button-card
             name: Energie
             icon: mdi:lightning-bolt
             tap_action:
               action: navigate
-              navigation_path: /osman-residence/energie
+              navigation_path: /Osman-Residence/energie
             styles: *sidebar_menu_button_style
           - type: custom:button-card
             name: Media
             icon: mdi:play-circle-outline
             tap_action:
               action: navigate
-              navigation_path: /osman-residence/media
+              navigation_path: /Osman-Residence/media
             styles: *sidebar_menu_button_style
           - type: custom:button-card
             name: Beveiliging
             icon: mdi:shield-outline
             tap_action:
               action: navigate
-              navigation_path: /osman-residence/beveiliging
+              navigation_path: /Osman-Residence/beveiliging
             styles: *sidebar_menu_button_style
           - type: custom:button-card
             name: "Camera's"
             icon: mdi:cctv
             tap_action:
               action: navigate
-              navigation_path: /osman-residence/cameras
+              navigation_path: /Osman-Residence/cameras
             styles: *sidebar_menu_button_style
           - type: custom:button-card
             name: Instellingen
             icon: mdi:cog-outline
             tap_action:
               action: navigate
-              navigation_path: /osman-residence/instellingen
+              navigation_path: /Osman-Residence/instellingen
             styles: *sidebar_menu_button_style
 
           # TODO: vervang sensor.time / sensor.date door jouw "Datum & tijd"-sensoren
@@ -353,7 +353,7 @@ views:
                     show_icon: false
                     tap_action:
                       action: navigate
-                      navigation_path: /osman-residence/verlichting
+                      navigation_path: /Osman-Residence/verlichting
                     styles: &quick_nav_button_style
                       card:
                         - background: var(--osman-surface-2)
@@ -397,7 +397,7 @@ views:
                     show_icon: false
                     tap_action:
                       action: navigate
-                      navigation_path: /osman-residence/instellingen
+                      navigation_path: /Osman-Residence/instellingen
                     styles: *quick_nav_button_style
 
               # TODO: vervang climate.* door jouw klimaatentiteiten
@@ -419,7 +419,7 @@ views:
                     show_icon: false
                     tap_action:
                       action: navigate
-                      navigation_path: /osman-residence/klimaat
+                      navigation_path: /Osman-Residence/klimaat
                     styles: *quick_nav_button_style
 
           # -- Rij 3: Energie / Rolluiken / Snelkoppelingen --
@@ -458,7 +458,7 @@ views:
                     show_icon: false
                     tap_action:
                       action: navigate
-                      navigation_path: /osman-residence/energie
+                      navigation_path: /Osman-Residence/energie
                     styles: *quick_nav_button_style
 
               # TODO: vervang cover.* door jouw rolluiken/covers (Somfy via TaHoma Switch)
@@ -484,7 +484,7 @@ views:
                     show_icon: false
                     tap_action:
                       action: navigate
-                      navigation_path: /osman-residence/rolluiken
+                      navigation_path: /Osman-Residence/rolluiken
                     styles: *quick_nav_button_style
 
               # TODO: vervang lock.voordeur / cover.garage / switch.buitenkamer / light.oprit
@@ -515,7 +515,7 @@ views:
                     show_icon: false
                     tap_action:
                       action: navigate
-                      navigation_path: /osman-residence/beveiliging
+                      navigation_path: /Osman-Residence/beveiliging
                     styles: *quick_nav_button_style
 
   # ==========================================================================
