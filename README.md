@@ -13,13 +13,22 @@ scènes, alarm, sloten, enz.). De entity_id's staan nog op placeholders — zie
 
 ```
 osman-residence-ui/
+├── hacs.json                  → manifest, maakt "themes/" installeerbaar via HACS
 ├── themes/
-│   └── osman_residence.yaml   → het HA-thema
+│   └── osman_residence.yaml   → het HA-thema (dit is wat HACS installeert)
 ├── dashboards/
-│   └── osman_residence.yaml   → de volledige dashboard-YAML (raw config)
+│   └── osman_residence.yaml   → de volledige dashboard-YAML (raw config,
+│                                 NOOIT via HACS — altijd handmatig plakken)
 ├── docs/
 └── README.md
 ```
+
+**Belangrijk:** HACS installeert alléén de map `themes/` (dat is precies
+waar `hacs.json` op stuurt). De map `dashboards/` wordt door HACS genegeerd
+en moet je **altijd zelf** kopiëren via de Raw configuratie-editor — er
+bestaat geen HACS-categorie voor Lovelace-dashboards. Download je een
+release/zip en verwacht je dat je dashboard daarmee "vanzelf" bijwerkt: dat
+gebeurt dus niet, dat blijft een handmatige plak-stap (zie stap 3 hieronder).
 
 ## Vereisten (installeren via HACS → Frontend)
 
@@ -41,19 +50,29 @@ nodig.
 
 1. **HACS-cards installeren** (zie tabel hierboven, via HACS → Frontend →
    zoek elke naam op en installeer).
-2. **Thema plaatsen**: kopieer `themes/osman_residence.yaml` naar
-   `/config/themes/` op je Home Assistant-installatie. Zorg dat je
-   `configuration.yaml` dit bevat:
-   ```yaml
-   frontend:
-     themes: !include_dir_merge_named themes
-   ```
-   Herstart daarna Home Assistant (of gebruik "YAML herladen → Thema's" als
-   dat volstaat).
-3. **Dashboard vullen**: open het dashboard "Osman-Residence" dat je al hebt
-   aangemaakt → potlood (rechtsboven, bewerken) → drie puntjes → **"Raw
-   configuratie bewerken"** → plak de volledige inhoud van
-   `dashboards/osman_residence.yaml`.
+2. **Thema installeren via HACS**:
+   - HACS → drie puntjes rechtsboven → **Aangepaste repositories**
+   - URL: `https://github.com/osmanboy/osman-residence-ui`, categorie:
+     **Thema**
+   - Zoek daarna "Osman Residence UI" op in HACS → **Downloaden**. HACS
+     plaatst dan automatisch alleen `themes/osman_residence.yaml` in
+     `/config/themes/`.
+   - Zorg dat je `configuration.yaml` dit bevat:
+     ```yaml
+     frontend:
+       themes: !include_dir_merge_named themes
+     ```
+   - Herstart daarna Home Assistant (of gebruik "YAML herladen → Thema's"
+     als dat volstaat).
+   - *Alternatief zonder HACS:* kopieer `themes/osman_residence.yaml`
+     handmatig naar `/config/themes/` (via de File editor-add-on, Samba of
+     SSH) — voor één bestand is dat net zo snel.
+3. **Dashboard vullen (altijd handmatig, HACS doet dit niet)**: open het
+   dashboard "Osman-Residence" dat je al hebt aangemaakt → potlood
+   (rechtsboven, bewerken) → drie puntjes → **"Raw configuratie bewerken"**
+   → plak de volledige inhoud van `dashboards/osman_residence.yaml` uit
+   deze repo → opslaan. Ververs daarna je browser met Ctrl+Shift+R (harde
+   refresh) zodat er geen oude cache blijft hangen.
 4. **Thema koppelen aan dit dashboard**: dashboard-instellingen → Thema →
    `osman_residence` (of stel het in als jouw gebruikersthema onderaan je
    profielpagina).
@@ -61,6 +80,12 @@ nodig.
    tijd"** toe (Instellingen → Apparaten en diensten → Integratie
    toevoegen), zodat `sensor.time` en `sensor.date` bestaan voor de klok
    onderaan de zijbalk.
+
+**Checklist om te verifiëren dat stap 3 echt gelukt is**: na het plakken en
+herladen hoort de bovenste standaard-tabbalk van Home Assistant te
+verdwijnen (alleen jouw linker zijbalk blijft over), en de Verlichting-pagina
+hoort per-kamer lichtkaarten te tonen — niet de tekst "Deze pagina volgt in
+Sprint 2". Zie je dat laatste nog wel, dan staat de oude configuratie er nog.
 
 ## Entiteiten aanpassen — zoek op "TODO"
 
