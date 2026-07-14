@@ -1,5 +1,5 @@
 ##############################################################################
-# OSMAN RESIDENCE UI — v0.1 (Sprint 1: Foundation)
+# OSMAN RESIDENCE UI — v1.0 (alle 9 pagina's)
 # Raw Lovelace-configuratie voor het dashboard "Osman-Residence"
 #
 # VEREISTE HACS-FRONTEND CARDS (Instellingen → HACS → Frontend):
@@ -9,7 +9,9 @@
 #   - card-mod
 #   - layout-card
 #   - apexcharts-card
-#   - browser_mod (reserveren we voor Sprint 3: pop-ups, kiosk mode)
+#   - browser_mod (nog niet actief gebruikt — gereserveerd voor pop-ups/kiosk)
+# (Camera's, alarm, sloten en de "Deuren & ramen"-lijst gebruiken ingebouwde
+#  HA-kaarten, dus daar is geen extra HACS-card voor nodig.)
 #
 # INSTALLEREN:
 #   1. Zet themes/osman_residence.yaml in /config/themes/
@@ -21,8 +23,17 @@
 #      → plak de volledige inhoud van dit bestand.
 #   3. Zoek op "TODO" hieronder en vervang elke entity_id door je
 #      eigen entiteiten (Ontwikkelaarstools → Staten om ze op te zoeken).
+#      Alles wat je nog niet hebt toont gewoon "unavailable" — niets breekt.
 #   4. Stel het thema van dit dashboard in op "osman_residence"
 #      (dashboard-instellingen, of onderaan je gebruikersprofiel).
+#
+# OPBOUW:
+#   Elke pagina is een grid-layout van "sidebar" (vaste linkerkolom, via de
+#   &sidebar-anchor letterlijk hergebruikt) + "content". Herbruikbare stukken
+#   (sidebar, sectiekoppen, paginatitel-stijl, "Alle X"-knopstijl, de
+#   grid-layout zelf) staan als YAML-anchor bij hun eerste gebruik in
+#   Overzicht, en worden daarna met *anchor opnieuw ingezet — dat scheelt
+#   een hoop duplicatie en houdt de styling overal identiek.
 ##############################################################################
 
 views:
@@ -32,7 +43,7 @@ views:
   - title: Overzicht
     path: overzicht
     type: custom:grid-layout
-    layout:
+    layout: &page_layout
       grid-template-columns: "230px 1fr"
       grid-template-rows: "1fr"
       grid-template-areas: |
@@ -146,7 +157,7 @@ views:
                   {% else %}## Goedenavond Eric{% endif %}
 
                   {% if is_state('person.eric', 'home') %}Fijn dat je thuis bent{% else %}Welkom terug{% endif %}
-                card_mod:
+                card_mod: &page_header
                   style: |
                     ha-card { background: transparent; box-shadow: none; border: none; padding: 20px 4px; }
                     h2 { color: var(--osman-text); font-size: 26px; margin: 0; }
@@ -314,7 +325,7 @@ views:
                     tap_action:
                       action: navigate
                       navigation_path: /osman-residence/verlichting
-                    styles:
+                    styles: &quick_nav_button_style
                       card:
                         - background: var(--osman-surface-2)
                         - padding: 10px
@@ -358,13 +369,7 @@ views:
                     tap_action:
                       action: navigate
                       navigation_path: /osman-residence/instellingen
-                    styles:
-                      card:
-                        - background: var(--osman-surface-2)
-                        - padding: 10px
-                      name:
-                        - color: var(--osman-text-muted)
-                        - font-size: 13px
+                    styles: *quick_nav_button_style
 
               # TODO: vervang climate.* door jouw klimaatentiteiten
               - type: vertical-stack
@@ -386,13 +391,7 @@ views:
                     tap_action:
                       action: navigate
                       navigation_path: /osman-residence/klimaat
-                    styles:
-                      card:
-                        - background: var(--osman-surface-2)
-                        - padding: 10px
-                      name:
-                        - color: var(--osman-text-muted)
-                        - font-size: 13px
+                    styles: *quick_nav_button_style
 
           # -- Rij 3: Energie / Rolluiken / Snelkoppelingen --
           - type: grid
@@ -425,6 +424,13 @@ views:
                         icon_color: green
                         primary: "{{ states('sensor.batterij_vermogen') }} kW"
                         secondary: "Batterij · {{ states('sensor.batterij_percentage') }}%"
+                  - type: custom:button-card
+                    name: Naar Energie
+                    show_icon: false
+                    tap_action:
+                      action: navigate
+                      navigation_path: /osman-residence/energie
+                    styles: *quick_nav_button_style
 
               # TODO: vervang cover.* door jouw rolluiken/covers (Somfy via TaHoma Switch)
               - type: vertical-stack
@@ -448,4 +454,717 @@ views:
                     name: Alle rolluiken
                     show_icon: false
                     tap_action:
+                      action: navigate
+                      navigation_path: /osman-residence/rolluiken
+                    styles: *quick_nav_button_style
 
+              # TODO: vervang lock.voordeur / cover.garage / switch.buitenkamer / light.oprit
+              - type: vertical-stack
+                cards:
+                  - type: markdown
+                    content: "SNELKOPPELINGEN"
+                    card_mod: *section_header
+                  - type: custom:mushroom-lock-card
+                    entity: lock.voordeur
+                    name: Voordeur
+                  - type: custom:mushroom-cover-card
+                    entity: cover.garage
+                    name: Garage
+                    show_buttons_control: true
+                  - type: horizontal-stack
+                    cards:
+                      - type: custom:mushroom-entity-card
+                        entity: switch.buitenkamer
+                        name: Buitenkamer
+                        tap_action:
+                          action: toggle
+                      - type: custom:mushroom-light-card
+                        entity: light.oprit
+                        name: Oprit
+                  - type: custom:button-card
+                    name: Alle beveiliging
+                    show_icon: false
+                    tap_action:
+                      action: navigate
+                      navigation_path: /osman-residence/beveiliging
+                    styles: *quick_nav_button_style
+
+  # ==========================================================================
+  # VERLICHTING
+  # ==========================================================================
+  - title: Verlichting
+    path: verlichting
+    type: custom:grid-layout
+    layout: *page_layout
+    cards:
+      - *sidebar
+
+      - type: vertical-stack
+        view_layout:
+          grid-area: content
+        cards:
+
+          - type: horizontal-stack
+            cards:
+              - type: markdown
+                content: |
+                  ## Verlichting
+                  Beheer per ruimte, of alles tegelijk
+                card_mod: *page_header
+
+              # TODO: deze knoppen sturen ALLE lichten hieronder tegelijk aan.
+              # Voeg/verwijder entity_id's in de lijst zodra je eigen lampen bekend zijn.
+              - type: custom:mushroom-chips-card
+                alignment: end
+                chips:
+                  - type: template
+                    icon: mdi:lightbulb-on
+                    content: Alles aan
+                    icon_color: orange
+                    tap_action:
+                      action: call-service
+                      service: light.turn_on
+                      target:
+                        entity_id:
+                          - light.woonkamer_spots
+                          - light.eettafel
+                          - light.keuken
+                          - light.hal
+                          - light.toilet
+                          - light.slaapkamer
+                          - light.kantoor
+                          - light.oprit
+                  - type: template
+                    icon: mdi:lightbulb-off-outline
+                    content: Alles uit
+                    tap_action:
+                      action: call-service
+                      service: light.turn_off
+                      target:
+                        entity_id:
+                          - light.woonkamer_spots
+                          - light.eettafel
+                          - light.keuken
+                          - light.hal
+                          - light.toilet
+                          - light.slaapkamer
+                          - light.kantoor
+                          - light.oprit
+                card_mod:
+                  style: |
+                    ha-card { background: transparent; box-shadow: none; }
+
+          - type: grid
+            columns: 3
+            square: false
+            cards:
+
+              # TODO: vervang light.* — begane grond
+              - type: vertical-stack
+                cards:
+                  - type: markdown
+                    content: "BEGANE GROND"
+                    card_mod: *section_header
+                  - type: custom:mushroom-light-card
+                    entity: light.woonkamer_spots
+                    name: Woonkamer Spots
+                    show_brightness_control: true
+                    use_light_color: false
+                  - type: custom:mushroom-light-card
+                    entity: light.eettafel
+                    name: Eettafel
+                    show_brightness_control: true
+                  - type: custom:mushroom-light-card
+                    entity: light.keuken
+                    name: Keuken
+                    show_brightness_control: true
+                  - type: custom:mushroom-light-card
+                    entity: light.hal
+                    name: Hal
+                    show_brightness_control: true
+                  - type: custom:mushroom-light-card
+                    entity: light.toilet
+                    name: Toilet
+                    show_brightness_control: true
+
+              # TODO: vervang light.* — bovenverdieping
+              - type: vertical-stack
+                cards:
+                  - type: markdown
+                    content: "BOVENVERDIEPING"
+                    card_mod: *section_header
+                  - type: custom:mushroom-light-card
+                    entity: light.slaapkamer
+                    name: Slaapkamer
+                    show_brightness_control: true
+                  - type: custom:mushroom-light-card
+                    entity: light.kantoor
+                    name: Kantoor
+                    show_brightness_control: true
+
+              # TODO: vervang light.oprit / voeg eigen buitenlampen toe
+              - type: vertical-stack
+                cards:
+                  - type: markdown
+                    content: "BUITEN"
+                    card_mod: *section_header
+                  - type: custom:mushroom-light-card
+                    entity: light.oprit
+                    name: Oprit
+                    show_brightness_control: true
+
+  # ==========================================================================
+  # ROLLUIKEN
+  # ==========================================================================
+  - title: Rolluiken
+    path: rolluiken
+    type: custom:grid-layout
+    layout: *page_layout
+    cards:
+      - *sidebar
+
+      - type: vertical-stack
+        view_layout:
+          grid-area: content
+        cards:
+
+          - type: horizontal-stack
+            cards:
+              - type: markdown
+                content: |
+                  ## Rolluiken
+                  Somfy-covers via TaHoma Switch
+                card_mod: *page_header
+
+              # TODO: pas de entity-lijst aan zodra jouw Somfy-covers gekoppeld zijn
+              - type: custom:mushroom-chips-card
+                alignment: end
+                chips:
+                  - type: template
+                    icon: mdi:arrow-up-bold
+                    content: Alles omhoog
+                    icon_color: orange
+                    tap_action:
+                      action: call-service
+                      service: cover.open_cover
+                      target:
+                        entity_id:
+                          - cover.woonkamer
+                          - cover.slaapkamer
+                          - cover.kantoor
+                          - cover.garage
+                  - type: template
+                    icon: mdi:arrow-down-bold
+                    content: Alles omlaag
+                    tap_action:
+                      action: call-service
+                      service: cover.close_cover
+                      target:
+                        entity_id:
+                          - cover.woonkamer
+                          - cover.slaapkamer
+                          - cover.kantoor
+                          - cover.garage
+                  - type: template
+                    icon: mdi:stop
+                    content: Stop
+                    tap_action:
+                      action: call-service
+                      service: cover.stop_cover
+                      target:
+                        entity_id:
+                          - cover.woonkamer
+                          - cover.slaapkamer
+                          - cover.kantoor
+                          - cover.garage
+                card_mod:
+                  style: |
+                    ha-card { background: transparent; box-shadow: none; }
+
+          # TODO: vervang cover.* door jouw Somfy-entiteiten
+          - type: grid
+            columns: 3
+            square: false
+            cards:
+              - type: custom:mushroom-cover-card
+                entity: cover.woonkamer
+                name: Woonkamer
+                show_buttons_control: true
+                show_position_control: true
+              - type: custom:mushroom-cover-card
+                entity: cover.slaapkamer
+                name: Slaapkamer
+                show_buttons_control: true
+                show_position_control: true
+              - type: custom:mushroom-cover-card
+                entity: cover.kantoor
+                name: Kantoor
+                show_buttons_control: true
+                show_position_control: true
+              - type: custom:mushroom-cover-card
+                entity: cover.garage
+                name: Garage
+                show_buttons_control: true
+                show_position_control: true
+
+  # ==========================================================================
+  # KLIMAAT
+  # ==========================================================================
+  - title: Klimaat
+    path: klimaat
+    type: custom:grid-layout
+    layout: *page_layout
+    cards:
+      - *sidebar
+
+      - type: vertical-stack
+        view_layout:
+          grid-area: content
+        cards:
+
+          - type: markdown
+            content: |
+              ## Klimaat
+              LG airco & Hisense warmtepomp
+            card_mod: *page_header
+
+          # TODO: vervang climate.* door jouw airco/warmtepomp-entiteiten
+          - type: grid
+            columns: 2
+            square: false
+            cards:
+              - type: custom:mushroom-climate-card
+                entity: climate.woonkamer
+                name: Woonkamer (LG airco)
+                show_temperature_control: true
+              - type: custom:mushroom-climate-card
+                entity: climate.slaapkamer
+                name: Slaapkamer (Hisense warmtepomp)
+                show_temperature_control: true
+
+          # TODO: vervang sensor.temperatuur_woonkamer / sensor.temperatuur_slaapkamer
+          - type: vertical-stack
+            cards:
+              - type: markdown
+                content: "TEMPERATUURVERLOOP (24U)"
+                card_mod: *section_header
+              - type: custom:apexcharts-card
+                graph_span: 24h
+                header:
+                  show: true
+                  show_states: true
+                  colorize_states: true
+                apex_config:
+                  chart: {height: 200, toolbar: {show: false}}
+                  legend: {show: true}
+                series:
+                  - entity: sensor.temperatuur_woonkamer
+                    name: Woonkamer
+                    color: var(--osman-accent)
+                    stroke_width: 2
+                  - entity: sensor.temperatuur_slaapkamer
+                    name: Slaapkamer
+                    color: var(--osman-blue)
+                    stroke_width: 2
+
+  # ==========================================================================
+  # ENERGIE
+  # ==========================================================================
+  - title: Energie
+    path: energie
+    type: custom:grid-layout
+    layout: *page_layout
+    cards:
+      - *sidebar
+
+      - type: vertical-stack
+        view_layout:
+          grid-area: content
+        cards:
+
+          - type: markdown
+            content: |
+              ## Energie
+              Zonnepanelen, verbruik & batterij
+            card_mod: *page_header
+
+          # TODO: vervang sensor.zonnepanelen_vermogen / sensor.huis_verbruik / sensor.batterij_vermogen / sensor.batterij_percentage
+          - type: grid
+            columns: 4
+            square: false
+            cards:
+              - type: custom:mushroom-template-card
+                icon: mdi:solar-power
+                icon_color: green
+                primary: "{{ states('sensor.zonnepanelen_vermogen') }} kW"
+                secondary: Zonnepanelen
+              - type: custom:mushroom-template-card
+                icon: mdi:home-lightning-bolt
+                icon_color: blue
+                primary: "{{ states('sensor.huis_verbruik') }} kW"
+                secondary: Huisverbruik
+              - type: custom:mushroom-template-card
+                icon: mdi:battery-plus
+                icon_color: green
+                primary: "{{ states('sensor.batterij_vermogen') }} kW"
+                secondary: Batterij (laden/ontladen)
+              - type: custom:gauge
+                entity: sensor.batterij_percentage
+                name: Batterij
+                min: 0
+                max: 100
+                severity:
+                  green: 50
+                  yellow: 20
+                  red: 0
+
+          # TODO: vervang sensor.zonnepanelen_vermogen / sensor.huis_verbruik
+          - type: vertical-stack
+            cards:
+              - type: markdown
+                content: "OPWEK VS. VERBRUIK (24U)"
+                card_mod: *section_header
+              - type: custom:apexcharts-card
+                graph_span: 24h
+                header:
+                  show: true
+                  show_states: true
+                  colorize_states: true
+                apex_config:
+                  chart: {height: 220, toolbar: {show: false}}
+                  legend: {show: true}
+                series:
+                  - entity: sensor.zonnepanelen_vermogen
+                    name: Opwek
+                    color: var(--osman-green)
+                    stroke_width: 2
+                  - entity: sensor.huis_verbruik
+                    name: Verbruik
+                    color: var(--osman-blue)
+                    stroke_width: 2
+
+          # TODO: vervang sensor.batterij_percentage
+          - type: vertical-stack
+            cards:
+              - type: markdown
+                content: "BATTERIJ (7 DAGEN)"
+                card_mod: *section_header
+              - type: custom:apexcharts-card
+                graph_span: 7d
+                header:
+                  show: true
+                  show_states: true
+                apex_config:
+                  chart: {height: 180, toolbar: {show: false}}
+                  legend: {show: false}
+                series:
+                  - entity: sensor.batterij_percentage
+                    name: Batterij %
+                    color: var(--osman-accent)
+                    stroke_width: 2
+                    type: area
+
+  # ==========================================================================
+  # MEDIA
+  # ==========================================================================
+  - title: Media
+    path: media
+    type: custom:grid-layout
+    layout: *page_layout
+    cards:
+      - *sidebar
+
+      - type: vertical-stack
+        view_layout:
+          grid-area: content
+        cards:
+
+          - type: horizontal-stack
+            cards:
+              - type: markdown
+                content: |
+                  ## Media
+                  Speler per ruimte
+                card_mod: *page_header
+
+              # TODO: pas de entity-lijst aan zodra jouw mediaspelers bekend zijn
+              - type: custom:mushroom-chips-card
+                alignment: end
+                chips:
+                  - type: template
+                    icon: mdi:pause
+                    content: Alles pauzeren
+                    icon_color: orange
+                    tap_action:
+                      action: call-service
+                      service: media_player.media_pause
+                      target:
+                        entity_id:
+                          - media_player.woonkamer
+                          - media_player.slaapkamer
+                          - media_player.keuken
+                card_mod:
+                  style: |
+                    ha-card { background: transparent; box-shadow: none; }
+
+          # TODO: vervang media_player.* door jouw mediaspelers
+          - type: grid
+            columns: 3
+            square: false
+            cards:
+              - type: custom:mushroom-media-player-card
+                entity: media_player.woonkamer
+                name: Woonkamer
+                use_media_info: true
+                media_controls:
+                  - play_pause_stop
+                  - previous
+                  - next
+                volume_controls:
+                  - volume_mute
+                  - volume_set
+                show_volume_level: true
+              - type: custom:mushroom-media-player-card
+                entity: media_player.slaapkamer
+                name: Slaapkamer
+                use_media_info: true
+                media_controls:
+                  - play_pause_stop
+                  - previous
+                  - next
+                volume_controls:
+                  - volume_mute
+                  - volume_set
+                show_volume_level: true
+              - type: custom:mushroom-media-player-card
+                entity: media_player.keuken
+                name: Keuken
+                use_media_info: true
+                media_controls:
+                  - play_pause_stop
+                  - previous
+                  - next
+                volume_controls:
+                  - volume_mute
+                  - volume_set
+                show_volume_level: true
+
+  # ==========================================================================
+  # BEVEILIGING
+  # ==========================================================================
+  - title: Beveiliging
+    path: beveiliging
+    type: custom:grid-layout
+    layout: *page_layout
+    cards:
+      - *sidebar
+
+      - type: vertical-stack
+        view_layout:
+          grid-area: content
+        cards:
+
+          - type: markdown
+            content: |
+              ## Beveiliging
+              Alarm, sloten & deur-/raamsensoren
+            card_mod: *page_header
+
+          # TODO: vervang alarm_control_panel.huis door jouw alarmsysteem-entiteit
+          - type: custom:mushroom-alarm-control-panel-card
+            entity: alarm_control_panel.huis
+            name: Alarm
+            states:
+              - armed_home
+              - armed_away
+              - disarmed
+
+          - type: grid
+            columns: 2
+            square: false
+            cards:
+              # TODO: vervang lock.voordeur
+              - type: custom:mushroom-lock-card
+                entity: lock.voordeur
+                name: Voordeur
+              # TODO: vervang cover.garage
+              - type: custom:mushroom-cover-card
+                entity: cover.garage
+                name: Garage
+                show_buttons_control: true
+
+              # TODO: vervang switch.buitenkamer
+              - type: custom:mushroom-entity-card
+                entity: switch.buitenkamer
+                name: Buitenkamer
+                tap_action:
+                  action: toggle
+              # TODO: vervang light.oprit
+              - type: custom:mushroom-light-card
+                entity: light.oprit
+                name: Oprit
+                show_brightness_control: true
+
+          # TODO: vervang binary_sensor.* door jouw deur-/raamcontacten
+          - type: vertical-stack
+            cards:
+              - type: markdown
+                content: "DEUREN & RAMEN"
+                card_mod: *section_header
+              - type: entities
+                entities:
+                  - entity: binary_sensor.deur_voordeur
+                    name: Voordeur
+                  - entity: binary_sensor.raam_woonkamer
+                    name: Raam woonkamer
+                  - entity: binary_sensor.raam_slaapkamer
+                    name: Raam slaapkamer
+                secondary_info: last-changed
+                card_mod:
+                  style: |
+                    ha-card { padding: 4px 12px; }
+
+  # ==========================================================================
+  # CAMERA'S
+  # ==========================================================================
+  - title: "Camera's"
+    path: cameras
+    type: custom:grid-layout
+    layout: *page_layout
+    cards:
+      - *sidebar
+
+      - type: vertical-stack
+        view_layout:
+          grid-area: content
+        cards:
+
+          - type: markdown
+            content: |
+              ## Camera's
+              Hikvision live-beelden
+            card_mod: *page_header
+
+          # TODO: vervang camera.* door jouw Hikvision-camera-entiteiten
+          - type: grid
+            columns: 2
+            square: false
+            cards:
+              - type: picture-entity
+                entity: camera.voordeur
+                name: Voordeur
+                camera_view: live
+                show_state: false
+              - type: picture-entity
+                entity: camera.oprit
+                name: Oprit
+                camera_view: live
+                show_state: false
+              - type: picture-entity
+                entity: camera.achtertuin
+                name: Achtertuin
+                camera_view: live
+                show_state: false
+              - type: picture-entity
+                entity: camera.garage
+                name: Garage
+                camera_view: live
+                show_state: false
+
+  # ==========================================================================
+  # INSTELLINGEN
+  # ==========================================================================
+  - title: Instellingen
+    path: instellingen
+    type: custom:grid-layout
+    layout: *page_layout
+    cards:
+      - *sidebar
+
+      - type: vertical-stack
+        view_layout:
+          grid-area: content
+        cards:
+
+          - type: markdown
+            content: |
+              ## Instellingen
+              Scènes, aanwezigheid & systeem
+            card_mod: *page_header
+
+          # TODO: vervang scene.* door jouw scènes
+          - type: vertical-stack
+            cards:
+              - type: markdown
+                content: "SCÈNES"
+                card_mod: *section_header
+              - type: grid
+                columns: 2
+                square: false
+                cards:
+                  - type: custom:bubble-card
+                    card_type: button
+                    entity: scene.filmstand
+                    name: Filmstand
+                  - type: custom:bubble-card
+                    card_type: button
+                    entity: scene.avondstand
+                    name: Avondstand
+                  - type: custom:bubble-card
+                    card_type: button
+                    entity: scene.eetstand
+                    name: Eetstand
+                  - type: custom:bubble-card
+                    card_type: button
+                    entity: scene.nachtstand
+                    name: Nachtstand
+
+          # TODO: vervang person.eric — voeg eigen rijen toe voor overige bewoners
+          - type: vertical-stack
+            cards:
+              - type: markdown
+                content: "AANWEZIGHEID"
+                card_mod: *section_header
+              - type: custom:mushroom-person-card
+                entity: person.eric
+                name: Eric
+                layout: horizontal
+
+          # TODO: maak de helper input_boolean.vakantiemodus aan via
+          # Instellingen → Apparaten en diensten → Hulpmiddelen → Aan/uit-hulpmiddel
+          - type: vertical-stack
+            cards:
+              - type: markdown
+                content: "SYSTEEM"
+                card_mod: *section_header
+              - type: custom:mushroom-entity-card
+                entity: input_boolean.vakantiemodus
+                name: Vakantiemodus
+                icon: mdi:airplane
+                tap_action:
+                  action: toggle
+              - type: horizontal-stack
+                cards:
+                  - type: custom:button-card
+                    name: HA-instellingen
+                    icon: mdi:cog
+                    tap_action:
+                      action: navigate
+                      navigation_path: /config/dashboard
+                    styles: *quick_nav_button_style
+                  - type: custom:button-card
+                    name: Thema's herladen
+                    icon: mdi:palette
+                    tap_action:
+                      action: call-service
+                      service: homeassistant.reload_themes
+                    styles: *quick_nav_button_style
+                  - type: custom:button-card
+                    name: HA herstarten
+                    icon: mdi:restart
+                    tap_action:
+                      action: call-service
+                      service: homeassistant.restart
+                      confirmation:
+                        text: Weet je zeker dat je Home Assistant wilt herstarten?
+                    styles: *quick_nav_button_style

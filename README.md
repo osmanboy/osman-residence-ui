@@ -3,10 +3,11 @@
 Een eigen, luxe dashboard-thema bovenop Home Assistant — donker, koperkleurig,
 met een vaste verticale zijbalk in plaats van de standaard tabbladen.
 
-Dit is **v0.1 (Sprint 1: Foundation)**: het thema + het volledig uitgewerkte
-"Overzicht"-scherm, plus 8 lege pagina's (Verlichting, Rolluiken, Klimaat,
-Energie, Media, Beveiliging, Camera's, Instellingen) die in latere sprints
-gevuld worden.
+Dit is **v1.0**: het thema + alle 9 pagina's volledig uitgewerkt (Overzicht,
+Verlichting, Rolluiken, Klimaat, Energie, Media, Beveiliging, Camera's,
+Instellingen), met functionele knoppen (lichten aan/uit, rolluiken op/neer,
+scènes, alarm, sloten, enz.). De entity_id's staan nog op placeholders — zie
+["Entiteiten aanpassen"](#entiteiten-aanpassen--zoek-op-todo) hieronder.
 
 ## Structuur
 
@@ -22,18 +23,19 @@ osman-residence-ui/
 
 ## Vereisten (installeren via HACS → Frontend)
 
-| Card              | Waarvoor gebruikt in v0.1                              |
-|-------------------|----------------------------------------------------------|
-| Mushroom          | Lichten, klimaat, covers, chips, template-cards          |
-| Bubble Card       | De verticale zijbalk-menu + scène-knoppen                |
-| button-card       | Batterijkaart, "alles"-knoppen, snelkoppelingen           |
-| card-mod          | Kleuren/typografie afstemmen op het thema                |
-| layout-card       | De sidebar/content grid-indeling                          |
-| apexcharts-card   | De kleine trendlijntjes (binnenklimaat, energie-opwek)   |
-| browser_mod       | Nog niet actief gebruikt — gereserveerd voor Sprint 3 (pop-ups) |
+| Card              | Waarvoor gebruikt                                          |
+|-------------------|-------------------------------------------------------------|
+| Mushroom          | Lichten, covers, klimaat, media, sloten, alarm, chips, template-cards |
+| Bubble Card       | De verticale zijbalk-menu + scène-knoppen                   |
+| button-card       | Batterijkaart, "alles"-knoppen, snelkoppelingen, systeemknoppen |
+| card-mod          | Kleuren/typografie afstemmen op het thema                   |
+| layout-card       | De sidebar/content grid-indeling op elke pagina              |
+| apexcharts-card   | Trendlijnen (binnenklimaat, energie-opwek, batterij, temperatuur) |
+| browser_mod       | Nog niet actief gebruikt — gereserveerd voor een latere sprint (pop-ups) |
 
-Je had dit rijtje zelf ook al genoemd — dit is exact die stack, ingezet op de
-plekken waar elke card het sterkst is.
+Camera's, het alarmpaneel en de deur-/raamlijst gebruiken bewust ingebouwde
+HA-kaarten (`picture-entity`, `entities`) — daar is geen extra HACS-card voor
+nodig.
 
 ## Installatie
 
@@ -69,24 +71,51 @@ Vervang die door je eigen entity_id's. Je vindt de juiste namen via
 **Ontwikkelaarstools → Staten** (filter bijvoorbeeld op `light.` of
 `climate.`).
 
-Korte checklist van wat je nodig hebt voor het Overzicht-scherm:
+Checklist van wat je nodig hebt, per pagina:
 
+**Overzicht**
 - 1× `person.*` (voor de begroeting)
 - 1× `weather.*` (buitenweer)
 - 1× temperatuursensor binnen (of gebruik een `climate`-entiteit)
 - 5× `light.*` (Woonkamer Spots, Eettafel, Keuken, Hal, Toilet)
 - 4× `scene.*` (Filmstand, Avondstand, Eetstand, Nachtstand)
 - 2× `climate.*` (Woonkamer, Slaapkamer)
-- 3× `cover.*` (Woonkamer, Slaapkamer, Kantoor) — dit worden je Somfy-covers
-  zodra TaHoma Switch gekoppeld is
+- 3× `cover.*` (Woonkamer, Slaapkamer, Kantoor)
 - Energiesensoren: zonnepanelen-vermogen, huisverbruik, batterijvermogen,
-  batterijpercentage
+  batterijpercentage, batterij-resterend
 - 1× `lock.*` (voordeur), 1× `cover.*` (garage), 1× `switch.*`
   (buitenkamer), 1× `light.*` (oprit)
 
-Alles wat je nog niet hebt (bijv. Somfy-covers, warmtepomp) kun je gewoon
-laten staan als placeholder — de kaart toont dan "unavailable" totdat de
-entiteit bestaat. Niets breekt erdoor.
+**Verlichting** — dezelfde lampen als hierboven, plus `light.slaapkamer` en
+`light.kantoor`. De knoppen "Alles aan/uit" sturen een vaste lijst
+entity_id's aan (geen groep-helper nodig) — pas die lijst in de YAML aan
+zodra je je eigen lampen hebt.
+
+**Rolluiken** — dezelfde covers als hierboven; dit worden je Somfy-covers
+zodra TaHoma Switch gekoppeld is. "Alles omhoog/omlaag/stop" werkt via
+dezelfde aanpak (vaste entity-lijst, geen helper nodig).
+
+**Klimaat** — dezelfde 2 `climate.*`-entiteiten, plus
+`sensor.temperatuur_woonkamer` / `sensor.temperatuur_slaapkamer` voor de
+trendgrafiek.
+
+**Energie** — dezelfde energiesensoren als bij Overzicht.
+
+**Media** — 3× `media_player.*` (Woonkamer, Slaapkamer, Keuken).
+
+**Beveiliging** — 1× `alarm_control_panel.*`, plus lock/cover/switch/light
+van hierboven, plus 3× `binary_sensor.*` (deur-/raamcontacten).
+
+**Camera's** — 4× `camera.*` (Voordeur, Oprit, Achtertuin, Garage) — je
+Hikvision-camera's zodra die integratie actief is.
+
+**Instellingen** — dezelfde scènes en `person.eric`, plus optioneel een
+`input_boolean.vakantiemodus`-hulpmiddel (Instellingen → Apparaten en
+diensten → Hulpmiddelen → Aan/uit-hulpmiddel aanmaken).
+
+Alles wat je nog niet hebt (bijv. Somfy-covers, warmtepomp, camera's) kun je
+gewoon laten staan als placeholder — de kaart toont dan "unavailable" totdat
+de entiteit bestaat. Niets breekt erdoor.
 
 ## Waarom geen losse YAML-integratie/tabbladen?
 
@@ -100,26 +129,11 @@ zelf welke pagina actief is.
 
 ## Roadmap
 
-- **v0.2** — Verlichting-pagina (per-kamer overzicht, groepen)
-- **v0.3** — Rolluiken-pagina (Somfy TaHoma Switch-integratie)
-- **v0.4** — Klimaat-pagina (LG airco + Hisense warmtepomp)
-- **v0.5** — Camera's (Hikvision)
-- **v0.6** — Energie-dashboard (uitgebreide grafieken)
-- **v1.0** — Eerste stabiele versie: plattegrond, scènebeheer, animaties
+- **v1.0 (nu)** — Alle 9 pagina's uitgewerkt met functionele knoppen, op
+  basis van placeholder-entiteiten.
+- **v1.1** — Jouw eigen entity_id's invullen (zie checklist hierboven) en
+  live testen in je eigen Home Assistant.
+- **Later** — Plattegrond, animaties, browser_mod pop-ups (bijv.
+  camera-preview bij deurbel), eventueel groep-helpers voor "alles"-knoppen
+  als de vaste entity-lijsten onhandig worden.
 
-## Naar GitHub pushen
-
-Ik heb dit nu klaargezet als bestanden die je zo kunt committen. Ik heb zelf
-geen schrijftoegang tot een GitHub-repository — dat moet via een expliciet
-gekoppelde GitHub-integratie in deze chat, en anders doe je het zelf met:
-
-```bash
-git init osman-residence-ui
-cd osman-residence-ui
-# kopieer de gedownloade bestanden hierin
-git add .
-git commit -m "v0.1 — Foundation: thema + Overzicht-dashboard"
-git branch -M main
-git remote add origin git@github.com:<jouw-gebruikersnaam>/osman-residence-ui.git
-git push -u origin main
-```
