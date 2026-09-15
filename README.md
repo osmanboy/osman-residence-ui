@@ -3,7 +3,7 @@
 Een eigen, luxe dashboard-thema bovenop Home Assistant — donker, koperkleurig,
 met een vaste verticale zijbalk in plaats van de standaard tabbladen.
 
-Dit is **v1.0**: het thema + alle 9 pagina's volledig uitgewerkt (Overzicht,
+Dit is **v1.1**: het thema + alle 9 pagina's volledig uitgewerkt (Overzicht,
 Verlichting, Rolluiken, Klimaat, Energie, Media, Beveiliging, Camera's,
 Instellingen), met functionele knoppen (lichten aan/uit, rolluiken op/neer,
 scènes, alarm, sloten, enz.). De entity_id's staan nog op placeholders — zie
@@ -75,7 +75,9 @@ nodig.
    refresh) zodat er geen oude cache blijft hangen.
 4. **Thema koppelen aan dit dashboard**: dashboard-instellingen → Thema →
    `osman_residence` (of stel het in als jouw gebruikersthema onderaan je
-   profielpagina).
+   profielpagina). Kies bij kleurmodus **Donker** of **Automatisch**; v1.1
+   gebruikt expliciet de donkere Home Assistant-basis zodat nieuwe kaarten
+   geen witte achtergrond met lichte tekst meer krijgen.
 5. **Live klok (optioneel maar aanbevolen)**: voeg de integratie **"Datum &
    tijd"** toe (Instellingen → Apparaten en diensten → Integratie
    toevoegen), zodat `sensor.time` en `sensor.date` bestaan voor de klok
@@ -86,6 +88,22 @@ herladen hoort de bovenste standaard-tabbalk van Home Assistant te
 verdwijnen (alleen jouw linker zijbalk blijft over), en de Verlichting-pagina
 hoort per-kamer lichtkaarten te tonen — niet de tekst "Deze pagina volgt in
 Sprint 2". Zie je dat laatste nog wel, dan staat de oude configuratie er nog.
+
+## Witte vlakken of slecht leesbare tekst oplossen
+
+Vanaf v1.1 is het thema expliciet gebaseerd op de donkere modus en bevat het
+contrastvariabelen voor standaardkaarten, Mushroom, Bubble Card, invoervelden,
+menu's en dialogen. Zie je na de update nog witte vlakken:
+
+1. HACS → Osman Residence UI → drie puntjes → **Opnieuw downloaden**.
+2. Ontwikkelaarstools → YAML → **Thema's herladen**.
+3. Controleer in je gebruikersprofiel dat thema `osman_residence` en kleurmodus
+   **Donker** of **Automatisch** zijn geselecteerd.
+4. Ververs de browser/app volledig; gebruik in een browser Ctrl+Shift+R.
+
+Let op: HACS werkt alleen `themes/osman_residence.yaml` bij. Wijzigingen aan
+het dashboardbestand moet je nog steeds handmatig in de Raw configuratie-editor
+plakken.
 
 ## Entiteiten aanpassen — zoek op "TODO"
 
@@ -154,9 +172,11 @@ zelf welke pagina actief is.
 
 ## Roadmap
 
-- **v1.0 (nu)** — Alle 9 pagina's uitgewerkt met functionele knoppen, op
+- **v1.0** — Alle 9 pagina's uitgewerkt met functionele knoppen, op
   basis van placeholder-entiteiten.
-- **v1.1** — Jouw eigen entity_id's invullen (zie checklist hierboven) en
+- **v1.1 (nu)** — Expliciete dark-modebasis en consistente contrastkleuren voor
+  standaardkaarten, Mushroom, Bubble Card, formulieren en dialogen.
+- **v1.2** — Jouw eigen entity_id's invullen (zie checklist hierboven) en
   live testen in je eigen Home Assistant.
 - **Later** — Plattegrond, animaties, browser_mod pop-ups (bijv.
   camera-preview bij deurbel), eventueel groep-helpers voor "alles"-knoppen
