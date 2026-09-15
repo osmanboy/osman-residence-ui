@@ -1,30 +1,71 @@
 osman_residence:
   # ============================================================
-  # OSMAN RESIDENCE THEME — v0.1 (Sprint 1: Foundation)
-  # Donker, warm, koperkleurig thema — gebaseerd op het mockup-ontwerp
+  # OSMAN RESIDENCE THEME — v1.1
+  # Expliciet dark-mode thema met consistente contrastkleuren.
   # ============================================================
+
+  # Laat Home Assistant dit thema op de donkere basis opbouwen. Zonder deze
+  # sectie gebruikt HA voor legacy-thema's de lichte basis; nieuwere kaarten
+  # kunnen dan een wit vlak krijgen terwijl de tekst wit/koper blijft.
+  modes:
+    dark:
+      primary-background-color: "#14100e"
+      secondary-background-color: "#1c1714"
+      card-background-color: "#1f1a17"
+      ha-card-background: "#1f1a17"
+      material-background-color: "#14100e"
+      material-secondary-background-color: "#1c1714"
+      paper-listbox-background-color: "#241e1a"
+      data-table-background-color: "#1f1a17"
+      table-row-background-color: "#1f1a17"
+      table-row-alternative-background-color: "#241e1a"
+      code-editor-background-color: "#171310"
+      primary-text-color: "#f5f1ec"
+      secondary-text-color: "#b8aea5"
+      text-primary-color: "#14100e"
+      disabled-text-color: "#706860"
+      mdc-theme-surface: "#1f1a17"
+      mdc-theme-background: "#14100e"
+      mdc-theme-on-surface: "#f5f1ec"
+      mdc-theme-primary: "#c98a52"
+      mdc-theme-on-primary: "#14100e"
+      input-fill-color: "#2a231f"
+      input-ink-color: "#f5f1ec"
+      input-label-ink-color: "#b8aea5"
+      input-dropdown-icon-color: "#b8aea5"
+      ha-dialog-surface-background: "#1f1a17"
+      ha-menu-surface-background: "#241e1a"
 
   # -- Achtergronden --
   primary-background-color: "#14100e"
   secondary-background-color: "#1c1714"
   card-background-color: "#1f1a17"
   ha-card-background: "#1f1a17"
+  lovelace-background: "#14100e"
   app-header-background-color: "#14100e"
+  app-header-text-color: "#f5f1ec"
+  sidebar-background-color: "#171310"
   clear-background-color: "#14100e"
 
   # -- Tekst --
   primary-text-color: "#f5f1ec"
-  secondary-text-color: "#948b83"
-  text-primary-color: "#f5f1ec"
-  disabled-text-color: "#5c5650"
+  secondary-text-color: "#b8aea5"
+  text-primary-color: "#14100e"
+  disabled-text-color: "#706860"
   sidebar-text-color: "#f5f1ec"
+  sidebar-icon-color: "#948b83"
+  sidebar-selected-text-color: "#c98a52"
+  sidebar-selected-icon-color: "#c98a52"
 
   # -- Accentkleur (koper/oranje) --
   primary-color: "#c98a52"
   accent-color: "#c98a52"
   state-icon-active-color: "#c98a52"
-  state-icon-color: "#7d766f"
+  state-icon-color: "#948b83"
+  state-active-color: "#c98a52"
+  state-inactive-color: "#7d766f"
   switch-checked-color: "#c98a52"
+  switch-checked-button-color: "#14100e"
   switch-unchecked-color: "#3a332e"
   slider-color: "#c98a52"
   paper-slider-knob-color: "#c98a52"
@@ -32,30 +73,61 @@ osman_residence:
   paper-slider-secondary-color: "#3a332e"
 
   # -- Randen / diepte --
-  divider-color: "#2c2521"
-  ha-card-border-radius: "16px"
+  divider-color: "#332b26"
+  ha-card-border-radius: "18px"
   ha-card-border-width: "1px"
-  ha-card-border-color: "#2c2521"
-  ha-card-box-shadow: "0 4px 14px rgba(0,0,0,0.35)"
+  ha-card-border-color: "#332b26"
+  ha-card-box-shadow: "0 8px 24px rgba(0, 0, 0, 0.28)"
 
-  # -- Statuskleuren (voor gebruik met var() in card-mod) --
+  # -- Osman Design Tokens --
   osman-bg: "#14100e"
   osman-surface: "#1f1a17"
-  osman-surface-2: "#241e1a"
+  osman-surface-2: "#2a231f"
   osman-accent: "#c98a52"
-  osman-accent-soft: "rgba(201, 138, 82, 0.15)"
+  osman-accent-contrast: "#14100e"
+  osman-accent-soft: "rgba(201, 138, 82, 0.16)"
   osman-text: "#f5f1ec"
-  osman-text-muted: "#948b83"
-  osman-border: "#2c2521"
+  osman-text-muted: "#b8aea5"
+  osman-border: "#332b26"
   osman-green: "#7bc47f"
-  osman-blue: "#5a9bd4"
-  osman-red: "#d9705a"
+  osman-yellow: "#e7b85c"
+  osman-blue: "#70a9dc"
+  osman-red: "#df7864"
 
-  # -- Mushroom-cards variabelen --
+  # -- Mushroom --
   mush-rgb-white: "245, 241, 236"
   mush-rgb-black: "20, 16, 14"
+  mush-rgb-primary-text-color: "245, 241, 236"
+  mush-rgb-secondary-text-color: "184, 174, 165"
+  mush-rgb-disabled-text-color: "112, 104, 96"
+  mush-rgb-state-light: "201, 138, 82"
   mush-icon-border-radius: "12px"
   mush-card-spacing: "10px"
+
+  # -- Bubble Card --
+  bubble-main-background-color: "#1f1a17"
+  bubble-secondary-background-color: "#2a231f"
+  bubble-accent-color: "#c98a52"
+  bubble-icon-background-color: "#2a231f"
+  bubble-sub-button-background-color: "#332b26"
+
+  # -- Formulieren, menu's en dialogen --
+  mdc-theme-surface: "#1f1a17"
+  mdc-theme-background: "#14100e"
+  mdc-theme-on-surface: "#f5f1ec"
+  mdc-theme-primary: "#c98a52"
+  mdc-theme-on-primary: "#14100e"
+  input-fill-color: "#2a231f"
+  input-ink-color: "#f5f1ec"
+  input-label-ink-color: "#b8aea5"
+  input-dropdown-icon-color: "#b8aea5"
+  paper-listbox-background-color: "#241e1a"
+  data-table-background-color: "#1f1a17"
+  table-row-background-color: "#1f1a17"
+  table-row-alternative-background-color: "#241e1a"
+  code-editor-background-color: "#171310"
+  ha-dialog-surface-background: "#1f1a17"
+  ha-menu-surface-background: "#241e1a"
 
   # -- Verplicht voor card-mod --
   card-mod-theme: "osman_residence"
@@ -63,13 +135,14 @@ osman_residence:
   # -- Globale kaartstyling (via card-mod) --
   card-mod-card-yaml: |
     ha-card {
-      border-radius: 16px;
-      border: 1px solid #2c2521;
-      box-shadow: 0 4px 14px rgba(0,0,0,0.35);
+      color: var(--primary-text-color);
+      background: var(--ha-card-background, var(--card-background-color));
+      border-radius: var(--ha-card-border-radius, 18px);
+      border: 1px solid var(--ha-card-border-color, #332b26);
+      box-shadow: var(--ha-card-box-shadow);
     }
 
   # -- Lettertype --
   paper-font-common-base_-_font-family: "'Inter', 'Segoe UI', sans-serif"
   paper-font-body1_-_font-family: "'Inter', 'Segoe UI', sans-serif"
   ha-card-header-font-size: "15px"
-
